@@ -11,7 +11,7 @@ def ConexaoBanco():
         con = sqlite3.connect(caminho)
         print('Conexao estabelecida com sucesso.')
     except Error as ex:
-        print(f'Erro na conexao {ex}')
+        print(f'Erro na conexao. {ex}')
     return con
 
 vcon = ConexaoBanco()
