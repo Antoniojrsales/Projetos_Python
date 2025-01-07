@@ -47,14 +47,14 @@ def contratante(y):
             continue    
 
         # Escrever os dados no PDF
-        cnv.drawString(mil_pol(10), y - 20, f'Nome: {nome}')
-        cnv.drawString(mil_pol(10), y - 40, f'Nacionalidade: {nacionalidade}')
-        cnv.drawString(mil_pol(10), y - 60, f'Empresa: {empresa}')
+        cnv.drawString(mil_pol(10), y - 20, f'Nome: {nome.title()}')
+        cnv.drawString(mil_pol(10), y - 40, f'Nacionalidade: {nacionalidade.title()}')
+        cnv.drawString(mil_pol(10), y - 60, f'Empresa: {empresa.title()}')
         cnv.drawString(mil_pol(10), y - 80, f'CPF / CNPJ: {cpf}')
         break
     return y - 100
 
-'''def prestador():
+def prestador():
     cnv.drawString(mil_pol(10), mil_pol(230), 'Prestador de Serviço:')
     nome_prest = input('Digite o seu nome prestador: ')
     nacionalidade_prest = input('Digite o pais que nasceu: ')
@@ -80,7 +80,29 @@ cnv.drawString(mil_pol(10), mil_pol(170), 'CLÁUSULA 3 – DO OBJETO')
 prazo_servico = input('Digite a data da entrega do servico a ser prestado: ')
 data_inicio = input('Digite o dia de inicio do servico')
 data_final = input('Digite o dia de finalizacao do servico')
-cnv.drawString(mil_pol(10), mil_pol(165), f'O prazo para a execução dos serviços será de {prazo_servico} dias, com início em {data_inicio} e término em {data_final}, podendo ser prorrogado mediante acordo entre as partes.')'''
+cnv.drawString(mil_pol(10), mil_pol(165), f'O prazo para a execução dos serviços será de {prazo_servico} dias, com início em {data_inicio} e término em {data_final}, podendo ser prorrogado mediante acordo entre as partes.')
+
+cnv.drawString(mil_pol(10), mil_pol(160), 'CLÁUSULA 4 – DAS OBRIGAÇÕES DO CONTRATADO')
+cnv.drawString(mil_pol(10), mil_pol(155), 'O Contratado se obriga a:')
+cnv.drawString(mil_pol(10), mil_pol(150), '1°- Prestar os serviços descritos na Cláusula 1 com qualidade e eficiência.')
+cnv.drawString(mil_pol(10), mil_pol(145), '2°- Cumprir o prazo de execução estabelecido.')
+cnv.drawString(mil_pol(10), mil_pol(140), '3°- Fornecer relatórios ou resultados periódicos, se necessário.')
+
+cnv.drawString(mil_pol(10), mil_pol(135), 'CLÁUSULA 5 – DAS OBRIGAÇÕES DO CONTRATANTE')
+cnv.drawString(mil_pol(10), mil_pol(130), 'O Contratante se obriga a:')
+cnv.drawString(mil_pol(10), mil_pol(125), '1°- Efetuar os pagamentos conforme estabelecido na Cláusula 2')
+cnv.drawString(mil_pol(10), mil_pol(120), '2°- Disponibilizar informações e materiais necessários para a execução dos serviços.')
+cnv.drawString(mil_pol(10), mil_pol(115), '3°- Cooperar com o Contratado no que for necessário para a execução do objeto deste contrato.')
+
+cnv.drawString(mil_pol(10), mil_pol(110), 'CLÁUSULA 6 – DA RESCISÃO')
+cnv.drawString(mil_pol(10), mil_pol(105), 'Este contrato poderá ser rescindido por qualquer uma das partes, mediante aviso prévio de [X dias], em caso de descumprimento das obrigações aqui estabelecidas. Em caso de rescisão sem justificativa, a parte que rescindir o contrato deverá pagar uma multa de [valor ou percentual] sobre o valor total do contrato.')
+
+cnv.drawString(mil_pol(10), mil_pol(100), 'CLÁUSULA 7 – DA CONFIDENCIALIDADE')
+cnv.drawString(mil_pol(10), mil_pol(95), 'Ambas as partes se comprometem a manter em sigilo todas as informações confidenciais a que tenham acesso durante a execução deste contrato, não podendo divulgá-las a terceiros sem prévia autorização.')
+
+cnv.drawString(mil_pol(10), mil_pol(90), 'CLÁUSULA 8 – DAS DISPOSIÇÕES GERAIS')
+cnv.drawString(mil_pol(10), mil_pol(85), '1°- A tolerância de qualquer das partes quanto ao descumprimento de qualquer obrigação estabelecida neste contrato não implicará em novação ou renúncia de direito.')
+cnv.drawString(mil_pol(10), mil_pol(80), '2°- Este contrato poderá ser alterado mediante acordo mútuo entre as partes, por escrito.')
 
 # Gerar PDF
 y = altura - mil_pol(40)
@@ -88,6 +110,6 @@ cabecalho()
 divisoria(y)
 y = contratante(y - 20)
 divisoria(y)
-#prestador()
+prestador()
 
 cnv.save()
