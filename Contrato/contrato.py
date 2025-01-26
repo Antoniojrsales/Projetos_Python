@@ -57,17 +57,23 @@ def contratante(y):
             print("Erro: Nome da empresa não pode estar vazio.")
             continue
         
-        cpf = input('Digite o seu CPF / CNPJ com 11 digitos: ').strip()
-        if not cpf.isdigit() or len(cpf) not in [11, 14]:
+        cpf_cnpj = input('Digite o seu CPF com 11 digitos / CNPJ com 14 digitos: ').strip()
+        if not cpf_cnpj.isdigit() or len(cpf_cnpj) not in [11, 14]:
             print("Erro: CPF / CNPJ deve conter 11 ou 14 dígitos numéricos.")
-            continue    
+            continue   
+        else:
+            """Formata o número como CPF ou CNPJ."""
+            if len(cpf_cnpj) == 11:
+                print(f'{cpf_cnpj[:3]}.{cpf_cnpj[3:6]}.{cpf_cnpj[6:9]}-{cpf_cnpj[9:]}')  # CPF
+            elif len(cpf_cnpj) == 14:
+                print(f'{cpf_cnpj[:2]}.{cpf_cnpj[2:5]}.{cpf_cnpj[5:8]}/{cpf_cnpj[8:12]}-{cpf_cnpj[12:]}')  # CNPJ 
 
         # Escrever os dados no PDF
         cnv.setFont('Helvetica', 12) # Fonte padrão
         cnv.drawString(mil_pol(10), y - 20, f'Nome: {nome.title()}')
         cnv.drawString(mil_pol(10), y - 35, f'Nacionalidade: {nacionalidade.title()}')
         cnv.drawString(mil_pol(10), y - 50, f'Empresa: {empresa.title()}')
-        cnv.drawString(mil_pol(10), y - 65, f'CPF / CNPJ: {cpf}')
+        cnv.drawString(mil_pol(10), y - 65, f'CPF / CNPJ: {cpf_cnpj}')
         break
     return y - 80
 
