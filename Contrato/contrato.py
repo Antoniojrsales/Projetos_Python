@@ -82,28 +82,30 @@ def contratante(y):
                 print(f'{cpf_cnpj[:2]}.{cpf_cnpj[2:5]}.{cpf_cnpj[5:8]}/{cpf_cnpj[8:12]}-{cpf_cnpj[12:]}')  # CNPJ 
 
         # Escrever os dados no PDF
-        cnv.setFont('Helvetica', 12) # Fonte padrão
-        cnv.drawString(mil_pol_mil(15), y - 74, f'Nome: {nome.title()}')
-        cnv.drawString(mil_pol_mil(15), y - 92, f'Nacionalidade: {nacionalidade.title()}')
-        cnv.drawString(mil_pol_mil(15), y - 110, f'Empresa: {empresa.title()}')
-        cnv.drawString(mil_pol_mil(15), y - 128, f'CPF / CNPJ: {cpf_cnpj}')
+        cnv.setFont('Roboto-Regular', 12) # Fonte padrão
+        cnv.drawString(mil_pol_mil(15), y - 76, f'Nome: {nome.title()}')
+        cnv.drawString(mil_pol_mil(15), y - 94, f'Nacionalidade: {nacionalidade.title()}')
+        cnv.drawString(mil_pol_mil(15), y - 112, f'Empresa: {empresa.title()}')
+        cnv.drawString(mil_pol_mil(15), y - 130, f'CPF / CNPJ: {cpf_cnpj}')
         break
     return y - 140
 
 def prestador(y):
-    cnv.setFont('Helvetica-Bold', 12) # Fonte maior e em negrito
-    cnv.drawString(mil_pol_mil(10), y, 'Prestador de Serviço:')
+    cnv.setLineWidth(1)
+    cnv.roundRect(mil_pol_mm(10), y - 72, mil_pol_mm(180), 90, 10, stroke=1, fill=0)
+    cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
+    cnv.drawString(mil_pol_mil(15), y + 26, 'Prestador de Serviço:')
     nome_prest = 'Antonio Gomes Sales Junior'
     nacionalidade_prest = 'Brasil'
     cpf_prest = '217.884.488-02'
     profissao_prest = 'Desenvolvedor'
     
-    cnv.setFont('Helvetica', 12) # Fonte padrão
-    cnv.drawString(mil_pol_mil(10), y - 20, f'Nome: {nome_prest}')
-    cnv.drawString(mil_pol_mil(10), y - 35, f'Nacionalidade: {nacionalidade_prest}')
-    cnv.drawString(mil_pol_mil(10), y - 50, f'CPF / CNPJ: {cpf_prest}')
-    cnv.drawString(mil_pol_mil(10), y - 65, f'Profissao: {profissao_prest}')
-    return y - 80
+    cnv.setFont('Roboto-Regular', 12) # Fonte padrão
+    cnv.drawString(mil_pol_mil(15), y - 6, f'Nome: {nome_prest}')
+    cnv.drawString(mil_pol_mil(15), y - 24, f'Nacionalidade: {nacionalidade_prest}')
+    cnv.drawString(mil_pol_mil(15), y - 42, f'CPF / CNPJ: {cpf_prest}')
+    cnv.drawString(mil_pol_mil(15), y - 60, f'Profissao: {profissao_prest}')
+    return y - 90
     
 def clausulas(y):
     os.system('cls')
