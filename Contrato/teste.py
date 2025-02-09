@@ -7,46 +7,31 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.lib.colors import HexColor
+from reportlab.lib.units import cm
 import os
 
 # Carregando a fonte Roboto
 pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
 pdfmetrics.registerFont(TTFont('Roboto-Regular', 'Roboto-Regular.ttf'))
 
-def mil_pol_mil(mil):
-    return mil / 0.35777
+def gerar_contrato_pdf(nome, cpf_cnpj, endereco, clausulas):
+    pdf_nome = f"Contrato_{nome.replace(' ', '_')}.pdf"
+    c = canvas.Canvas(pdf_nome, pagesize=A4)
+    largura, altura = A4
 
-def mil_pol_mm(mm):
-    return mm * 2.83465
-
-# Configuração do PDF
-cnv = canvas.Canvas('contrato_ajustado.pdf', pagesize=A4)
-largura, altura = A4 
-
-# Função de cabeçalho
-def cabecalho():
     # Fundo azul escuro
-    cnv.setFillColor(HexColor("#003f66"))
-    cnv.rect(0, altura - mil_pol_mil(10), 150, 50, stroke=0, fill=1)
-
-    # Texto cabecalho (Título)
-    cnv.setFillColor(HexColor("#ff4500")) # Define a cor do texto como preta
-    cnv.setFont('Roboto-Bold', 32) # Configura a fonte como "Roboto-Bold" (negrito) com tamanho 20
-    cnv.drawCentredString(150, altura - mil_pol_mil(28), 'CONTRATO')
-    cnv.setFillColor(colors.black)
-    cnv.setFont('Roboto-Bold', 13)
-    cnv.drawCentredString(148, altura - mil_pol_mil(36), 'DE PRESTAÇÃO DE SERVIÇOS')
-
-    cnv.setFont('Roboto-Bold', 12)
-    cnv.drawCentredString(500, altura - mil_pol_mil(31), 'ANTONIOJRSALES')
-
-    cnv.setFont('Roboto-Regular', 12)
-    cnv.drawCentredString(500, altura - mil_pol_mil(36), 'DEVELOPER')
-
-    # Inicialização de y
-y = altura - mil_pol_mil(40)
-
-# Cabeçalho
-cabecalho()
-
-cnv.save()
+    c.setFillColor(HexColor("#003f66"))
+    c.rect(0, altura - 1 * cm, 150, 50, stroke=0, fill=1)
+    
+    # Cabeçalho do contrato
+    c.setFillColor(HexColor("#ff4500")) # Define a cor do texto
+    c.setFont('Roboto-Bold', 32) # Configura a fonte como "Roboto-Bold" (negrito) com tamanho 20
+    c.drawCentredString(largura / 2, altura - 2 * cm, "CONTRATO")
+    c.setFillColor(colors.black)
+    
+    c.setFont('Roboto-Bold', 13)
+    c.drawCentredString(148, altura - mil_pol_mil(36), 'DE PRESTAÇÃO DE SERVIÇOS')
+    c.setFont('Roboto-Bold', 12)
+    c.drawCentredString(500, altura - mil_pol_mil(31), 'ANTONIOJRSALES'
+    c.setFont('Roboto-Regular', 12)
+    c.drawCentredString(500, altura - mil_pol_mil(36), 'DEVELOPER')
