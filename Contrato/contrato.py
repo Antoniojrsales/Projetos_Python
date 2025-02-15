@@ -47,7 +47,7 @@ def roda_pe():
 
     cnv.setFillColor(colors.white)
     cnv.setFont('Roboto-Regular', 12)
-    cnv.drawCentredString(480, altura - 822, 'antoniogomes.junior@gmail.com')
+    cnv.drawCentredString(480, altura - 822, 'antoniogomes.junio@gmail.com')
 
 # Função para validar e formatar CPF/CNPJ
 def formatar_cpf_cnpj(documento):
@@ -105,7 +105,7 @@ def coletar_dados_prestador():
     cnv.drawString(43, altura - 255, 'Prestador de Serviço:')
     nome_prest = 'Antonio Gomes Sales Junior'
     nacionalidade_prest = 'Brasil'
-    cpf_prest = '217.884.488-02'
+    cpf_prest = 'xxx.xxx.xxx-xx'
     profissao_prest = 'Desenvolvedor'
     
     cnv.setFillColor(colors.black)
@@ -206,13 +206,13 @@ def clausulas():
         roda_pe()
         return altura - 255
 
-def coletar_assinaturas():
+'''def coletar_assinaturas():
     # Assinaturas
     cnv.line(4 * cm, 3 * cm, 10 * cm, 3 * cm)
     cnv.drawString(mil_pol_mm(0), altura - 354, "Contratante")
     
     cnv.line(12 * cm, 3 * cm, 18 * cm, 3 * cm)
-    cnv.drawString(mil_pol_mm(100), altura - 354, "Contratado")
+    cnv.drawString(mil_pol_mm(100), altura - 354, "Contratado")'''
 
 def main():
     cabecalho()
@@ -220,7 +220,7 @@ def main():
     coletar_dados_contratante()
     coletar_dados_prestador()
     clausulas()
-    coletar_assinaturas()
+    #coletar_assinaturas()
 
 if __name__ == "__main__":
     main()
