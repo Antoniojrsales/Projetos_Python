@@ -10,6 +10,7 @@ from reportlab.lib.colors import HexColor
 from reportlab.lib.units import cm
 import re
 import os
+from datetime import date
 
 # Carregando a fonte Roboto
 pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
@@ -21,6 +22,7 @@ def mil_pol_mm(mm):
 # Configuração do PDF
 cnv = canvas.Canvas('Contrato.pdf', pagesize=A4)
 largura, altura = A4 
+nome_contratante = []
 
 # Função de cabeçalho
 def cabecalho():
@@ -64,10 +66,12 @@ def coletar_dados_contratante():
     cnv.setLineWidth(1)
     cnv.roundRect(28, altura - 230, mil_pol_mm(180), 90, 10, stroke=1, fill=0)
     cnv.setFillColor(colors.black)
+    cnv.drawImage('perfil.png', 28, altura - 137, width=20, height=20, mask='auto')
     cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
-    cnv.drawString(43, altura - 135, 'Contratante:')
+    cnv.drawString(52, altura - 133, 'Contratante:')
     while True:
         nome = input('Digite o seu nome contratante: ').strip()
+        nome_contratante.append(nome)
         if not nome or nome.isnumeric():
             print("Erro: O valor de Nome e invalido ou pode estar vazio.")
             continue
@@ -83,9 +87,9 @@ def coletar_dados_contratante():
             continue
         
         cpf_cnpj = input("Digite o CPF ou CNPJ do contratante: ")
-        if cpf_cnpj or not cpf_cnpj.isdigit():
+        if cpf_cnpj and cpf_cnpj.isdigit():
             cpf_cnpj_formatado = formatar_cpf_cnpj(cpf_cnpj)
-        else:
+        else:           
             print("CPF/CNPJ inválido. Tente novamente.")
 
         # Escrever os dados no PDF
@@ -101,8 +105,9 @@ def coletar_dados_contratante():
 def coletar_dados_prestador():
     cnv.setLineWidth(1)
     cnv.roundRect(28, altura - 350, mil_pol_mm(180), 90, 10, stroke=1, fill=0)
+    cnv.drawImage('perfilgradient.png', 28, altura - 257, width=20, height=20, mask='auto')
     cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
-    cnv.drawString(43, altura - 255, 'Prestador de Serviço:')
+    cnv.drawString(52, altura - 252, 'Prestador de Serviço:')
     nome_prest = 'Antonio Gomes Sales Junior'
     nacionalidade_prest = 'Brasil'
     cpf_prest = 'xxx.xxx.xxx-xx'
@@ -150,7 +155,7 @@ def clausulas():
         ### Clausula 3 ###
         cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
         cnv.drawString(28, altura - 485, 'CLÁUSULA 3 – DO OBJETO')
-        prazo_servico = input('Digite a data da entrega do servico a ser prestado: ')
+        prazo_servico = input('Digite quantos dias de servico a ser prestado: ')
         if not prazo_servico or prazo_servico.isalpha():
             print("Erro: A data do serviço e invalido ou pode estar vazia.")
             continue
@@ -206,13 +211,67 @@ def clausulas():
         roda_pe()
         return altura - 255
 
-'''def coletar_assinaturas():
-    # Assinaturas
-    cnv.line(4 * cm, 3 * cm, 10 * cm, 3 * cm)
-    cnv.drawString(mil_pol_mm(0), altura - 354, "Contratante")
+def coletar_assinaturas():
+    cnv.setFont('Roboto-Bold', 12)
+    cnv.setFillColor(HexColor("#000000"))
+
+    cnv.drawString(28, altura - 285, 'Justo e acordado, firmam as partes:')
+    cnv.drawImage('aperto-de-mao.png', 240, altura - 300, width=28, height=28, mask='auto')
+
+    # Contratante
+    cnv.setFont('Roboto-Bold', 12)
+    cnv.setFillColor(HexColor("#00A69C"))
+    cnv.drawImage('perfil.png', 28, altura - 340, width=22, height=22, mask='auto')
+    cnv.drawString(53, altura - 335, "CONTRATANTE:")
+    cnv.setFont('Roboto-Bold', 12)
+    cnv.setFillColor(HexColor("#000000"))
+    cnv.drawString(28, altura - 355, ''.join(nome_contratante))
+
+    # Contratado
+    cnv.setFont('Roboto-Bold', 12)
+    cnv.setFillColor(HexColor("#005487"))
+    cnv.drawImage('perfilgradient.png', 335, altura - 340, width=22, height=22, mask='auto')
+    cnv.drawString(360, altura - 335, "CONTRATADO:")
+    cnv.setFont('Roboto-Bold', 12)
+    cnv.setFillColor(HexColor("#000000"))
+    cnv.drawString(320, altura - 355, "Antonio Gome Sales Junior")
+
+    # Cidade e data
+    cnv.setFont('Roboto-Bold', 12)
+    cidade = 'Fortaleza'
+    data = date.today()
+    mes_atual = data.month
+    mes = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro',
+    }
+    mes_atual_extenso = mes[mes_atual]
     
-    cnv.line(12 * cm, 3 * cm, 18 * cm, 3 * cm)
-    cnv.drawString(mil_pol_mm(100), altura - 354, "Contratado")'''
+    cnv.drawString(320, altura - 400, f'{cidade}, {data.strftime("%d")} de {mes_atual_extenso} de {data.strftime("%Y")}')
+
+    # Linhas para assinaturas
+    cnv.line(100, 330, 250, 330)  # Linha Contratante
+    cnv.line(300, 330, 450, 330)  # Linha Contratado
+
+    # Legendas abaixo das linhas
+    cnv.setFont("Helvetica-Bold", 8)
+    cnv.setFillColor(HexColor("#00A69C"))
+    cnv.drawString(130, 300, "Assinatura Contratante")
+
+    cnv.setFillColor(HexColor("#005487"))
+    cnv.drawString(330, 300, "Assinatura Contratado")
+
+    cnv.drawImage('assinatura.png', 267, altura - 620, width=40, height=40, mask='auto')
 
 def main():
     cabecalho()
@@ -220,9 +279,10 @@ def main():
     coletar_dados_contratante()
     coletar_dados_prestador()
     clausulas()
-    #coletar_assinaturas()
+    coletar_assinaturas()
+    
+    cnv.save()
 
 if __name__ == "__main__":
     main()
 
-cnv.save()
