@@ -26,30 +26,43 @@ nome_contratante = []
 
 # Função de cabeçalho
 def cabecalho():
-    # Fundo azul escuro
+    # Adiciona uma pequena margem na cor azul
     cnv.setFillColor(HexColor("#003f66"))
     cnv.rect(0, altura - 28, 150, 50, stroke=0, fill=1)
 
-    # Texto cabecalho (Título)
+    # Adiciona o texto principal com destaque
     cnv.setFillColor(HexColor("#ff4500")) # Define a cor do texto
-    cnv.setFont('Roboto-Bold', 32) # Configura a fonte como "Roboto-Bold" (negrito) com tamanho 20
-    cnv.drawCentredString(150, altura - 75, 'CONTRATO')
-    
+    cnv.setFont('Roboto-Bold', 35) # Configura a fonte como "Roboto-Bold" (negrito)
+    cnv.drawCentredString(148, altura - 75, 'CONTRATO')    
     cnv.setFillColor(colors.black)
     cnv.setFont('Roboto-Bold', 13)
     cnv.drawCentredString(148, altura - 95, 'DE PRESTAÇÃO DE SERVIÇOS')
+    
+    # Adiciona o texto informaçoes pessoais e logo
     cnv.setFont('Roboto-Bold', 12)
-    cnv.drawCentredString(500, altura - 81, 'ANTONIOJRSALES')
-    cnv.setFont('Roboto-Regular', 12)
-    cnv.drawCentredString(500, altura - 95, 'DEVELOPER')
+    cnv.drawCentredString(500, altura - 62, 'ANTONIOJRSALES')
+    cnv.setFont('Roboto-Regular', 11)
+    texto = ' '.join('DEVELOPER')  # 2 espaços
+    cnv.drawCentredString(500, altura - 77, texto)
+    cnv.drawImage('artificialbrain.png', 410, altura - 82, width=30, height=30, mask='auto')
 
+# Função de rodape
 def roda_pe():
+    # Adicionando cor de fundo
     cnv.setFillColor(HexColor("#003f66"))
     cnv.rect(0, altura - 840, 600, 50, stroke=0, fill=1)
 
+    # Adiciona o texto informaçoes pessoais
     cnv.setFillColor(colors.white)
-    cnv.setFont('Roboto-Regular', 12)
-    cnv.drawCentredString(480, altura - 822, 'antoniogomes.junio@gmail.com')
+    cnv.setFont('Roboto-Regular', 9)
+    cnv.drawCentredString(184, altura - 822, 'E-mail: antoniogomes.junio@gmail.com  |  WhatsApp: (85) 99200-6309  |  ')
+    cnv.setFont('Roboto-Regular', 9)
+    
+    # Adiciona o texto do LinkedIn
+    cnv.drawString(330, altura - 822, 'LinkedIn: linkedin.com/in/antonio-gomes-31bb18137/')
+    
+    # Cria o link clicável
+    cnv.linkURL('https://linkedin.com/in/antonio-gomes-31bb18137/',(330, altura - 822, 580, altura - 810))
 
 # Função para validar e formatar CPF/CNPJ
 def formatar_cpf_cnpj(documento):
@@ -59,8 +72,9 @@ def formatar_cpf_cnpj(documento):
     elif len(documento) == 14:
         return f'{documento[:2]}.{documento[2:5]}.{documento[5:8]}/{documento[8:12]}-{documento[12:]}'
     else:
-        return None
+        return documento
 
+# Função para coletar dados do contratante
 def coletar_dados_contratante():
     # Desenhar o contorno arredondado
     cnv.setLineWidth(1)
@@ -86,11 +100,17 @@ def coletar_dados_contratante():
             print("Erro: Nome da empresa não pode estar vazio.")
             continue
         
-        cpf_cnpj = input("Digite o CPF ou CNPJ do contratante: ")
-        if cpf_cnpj and cpf_cnpj.isdigit():
-            cpf_cnpj_formatado = formatar_cpf_cnpj(cpf_cnpj)
-        else:           
-            print("CPF/CNPJ inválido. Tente novamente.")
+        cpf_cnpj_formatado = "Não informado"  # Valor padrão para evitar erro
+        while True:
+            cpf_cnpj = input("Digite o CPF ou CNPJ do contratante: ").strip()
+            if cpf_cnpj and cpf_cnpj.isdigit():
+                if len(cpf_cnpj) == 11 or len(cpf_cnpj) == 14:
+                    cpf_cnpj_formatado = formatar_cpf_cnpj(cpf_cnpj)
+                    break
+                else:
+                    print("CPF/CNPJ inválido. Deve conter 11 ou 14 dígitos. Tente novamente.")
+            else:
+                print("Entrada inválida. Digite apenas números.")
 
         # Escrever os dados no PDF
         cnv.setFillColor(colors.black)
