@@ -10,7 +10,8 @@ from reportlab.lib.colors import HexColor
 from reportlab.lib.units import cm
 import re
 import os
-from datetime import date
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 # Carregando a fonte Roboto
 pdfmetrics.registerFont(TTFont('Roboto-Bold', 'Roboto-Bold.ttf'))
@@ -152,22 +153,33 @@ def clausulas():
             print("Erro: Tipo de serviço não pode estar vazia.")
             continue
         cnv.setFont('Roboto-Regular', 12) # Fonte padrão
-        cnv.drawString(28, altura - 400, f'O presente contrato tem como objeto a prestação de serviços: ({servico})')
+        cnv.drawString(28, altura - 400, f'O presente contrato tem como objeto a prestação de serviços: ({servico.title()})')
         
         ### Clausula 2 ###
         cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
         cnv.drawString(28, altura - 425, 'CLÁUSULA 2 – DO VALOR E FORMA DE PAGAMENTO')        
-        valor_servico = input('Digite o valor do servico a ser prestado: ').strip()
-        if not valor_servico or valor_servico.isalpha():
-            print("Erro: O Valor do serviço e invalido ou pode estar vazia.")
-            continue
-        else:
-            valor_servico_float = float(valor_servico)        
-        forma_pag = input('Digite a forma de pagamento do servico a ser prestado [Vista, Parcelado, Com vencimentos]: ').strip().lower()
-        lista_form_pag = ['vista', 'parcelado', 'com vencimentos']
-        if not forma_pag or forma_pag not in lista_form_pag:
-            print("Erro: A Forma de pagamento esta fora da lista prevista ou pode estar vazia.")
-            continue
+        while True:
+            valor_servico = input('Digite o valor do servico a ser prestado: ').strip()
+            try:
+                valor_servico_float = float(valor_servico)
+                break
+            except ValueError:
+                print("Erro: O valor do serviço é inválido ou está vazio.")
+                continue     
+        
+        while True:
+            forma_pag = input('Digite a forma de pagamento do servico a ser prestado [1]Vista, [2]Parcelado, [3]Com vencimentos: ').strip()
+            formas_pagamento = {
+                '1': 'Vista',
+                '2': 'Parcelado',
+                '3': 'Com vencimentos'
+            }    
+            if forma_pag in formas_pagamento:
+                forma_pag = formas_pagamento[forma_pag]
+                break
+            else:
+                print('Erro: A Forma de pagamento esta fora da lista prevista ou pode estar vazia.')
+        
         cnv.setFont('Roboto-Regular', 12) # Fonte padrão
         cnv.drawString(28, altura - 445, f'O valor total do contrato será de R$ {valor_servico_float:.2f}, que será pago da seguinte forma.')
         cnv.drawString(28, altura - 460, f'Forma de pagamento: {forma_pag.capitalize()}')       
@@ -175,33 +187,53 @@ def clausulas():
         ### Clausula 3 ###
         cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
         cnv.drawString(28, altura - 485, 'CLÁUSULA 3 – DO OBJETO')
-        prazo_servico = input('Digite quantos dias de servico a ser prestado: ')
-        if not prazo_servico or prazo_servico.isalpha():
-            print("Erro: A data do serviço e invalido ou pode estar vazia.")
-            continue
-        data_inicio = input('Digite o dia de inicio do servico: ')
-        data_final = input('Digite o dia de finalizacao do servico: ')      
+        while True:
+            prazo_servico = input('Digite quantos dias de serviço a ser prestado: ').strip()
+            if not prazo_servico.isdigit():
+                print("Erro: A quantidade de dias deve ser um número inteiro válido.")
+                continue
+            else:
+                dias_servico = int(prazo_servico)
+                break
+        while True:
+            data_inicio_str = input("Digite a data de início (formato DD-MM-YYYY): ").strip()
+            try:
+                data_inicio = datetime.strptime(data_inicio_str, "%d-%m-%Y")
+                break
+            except ValueError:
+                print("Erro: Formato de data inválido! Use o formato DD-MM-YYYY.")
+        data = date.today()
+        mes_atual = data.month
+        mes = {
+            1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+            5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+            9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro',
+        }
+        mes_atual_extenso = mes[mes_atual]
+        data_final = data_inicio + relativedelta(days=dias_servico)
+
         cnv.setFont('Roboto-Regular', 12) # Fonte padrão
-        cnv.drawString(28, altura - 505, f'O prazo para a execução dos serviços será de {prazo_servico} dias, com início em {data_inicio} e término em {data_final},')
-        cnv.drawString(28, altura - 520, f'podendo ser prorrogado mediante acordo entre as partes.')
+        cnv.drawString(28, altura - 505, f'O prazo para a execução dos serviços será de {prazo_servico} dias, com início em {data_inicio.strftime("%d")} de {mes_atual_extenso} de {data.strftime("%Y")},')
+        cnv.drawString(28, altura - 520, f'e término em {data_final.strftime("%d")} de {mes_atual_extenso} de {data_final.strftime("%Y")}')
+        cnv.drawString(28, altura - 535, f'podendo ser prorrogado mediante acordo entre as partes.')
         
         ### Clausula 4 ###
         cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
-        cnv.drawString(28, altura - 550, 'CLÁUSULA 4 – DAS OBRIGAÇÕES DO CONTRATADO')
+        cnv.drawString(28, altura - 565, 'CLÁUSULA 4 – DAS OBRIGAÇÕES DO CONTRATADO')
         cnv.setFont('Roboto-Regular', 12) # Fonte padrão
-        cnv.drawString(28, altura - 570, 'O Contratado se obriga a:')
-        cnv.drawString(28, altura - 585, '1° - Prestar os serviços descritos na Cláusula 1 com qualidade e eficiência.')
-        cnv.drawString(28, altura - 600, '2° - Cumprir o prazo de execução estabelecido.')
-        cnv.drawString(28, altura - 615, '3° - Fornecer relatórios ou resultados periódicos, se necessário.')
+        cnv.drawString(28, altura - 585, 'O Contratado se obriga a:')
+        cnv.drawString(28, altura - 600, '1° - Prestar os serviços descritos na Cláusula 1 com qualidade e eficiência.')
+        cnv.drawString(28, altura - 615, '2° - Cumprir o prazo de execução estabelecido.')
+        cnv.drawString(28, altura - 630, '3° - Fornecer relatórios ou resultados periódicos, se necessário.')
         
         ### Clausula 5 ###
         cnv.setFont('Roboto-Bold', 12) # Fonte maior e em negrito
-        cnv.drawString(28, altura - 645, 'CLÁUSULA 5 – DAS OBRIGAÇÕES DO CONTRATANTE')
+        cnv.drawString(28, altura - 660, 'CLÁUSULA 5 – DAS OBRIGAÇÕES DO CONTRATANTE')
         cnv.setFont('Roboto-Regular', 12) # Fonte padrão
-        cnv.drawString(28, altura - 665, 'O Contratante se obriga a:')
-        cnv.drawString(28, altura - 680, '1°- Efetuar os pagamentos conforme estabelecido na Cláusula 2')
-        cnv.drawString(28, altura - 695, '2°- Disponibilizar informações e materiais necessários para a execução dos serviços.')
-        cnv.drawString(28, altura - 710, '3°- Cooperar com o Contratado no que for necessário para a execução do objeto deste contrato.')
+        cnv.drawString(28, altura - 680, 'O Contratante se obriga a:')
+        cnv.drawString(28, altura - 695, '1°- Efetuar os pagamentos conforme estabelecido na Cláusula 2')
+        cnv.drawString(28, altura - 710, '2°- Disponibilizar informações e materiais necessários para a execução dos serviços.')
+        cnv.drawString(28, altura - 725, '3°- Cooperar com o Contratado no que for necessário para a execução do objeto deste contrato.')
 
         cnv.showPage() # Quebra de página
 
@@ -262,18 +294,9 @@ def coletar_assinaturas():
     data = date.today()
     mes_atual = data.month
     mes = {
-    1: 'Janeiro',
-    2: 'Fevereiro',
-    3: 'Março',
-    4: 'Abril',
-    5: 'Maio',
-    6: 'Junho',
-    7: 'Julho',
-    8: 'Agosto',
-    9: 'Setembro',
-    10: 'Outubro',
-    11: 'Novembro',
-    12: 'Dezembro',
+            1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+            5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+            9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro',
     }
     mes_atual_extenso = mes[mes_atual]
     
